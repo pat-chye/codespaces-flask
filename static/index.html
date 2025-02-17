@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>PWA + DB + Insert + Responsive</title>
+  <meta charset="UTF-8">
+  <title>PWA + DB + Single Responsive Icon</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Center everything and set default font */
@@ -13,76 +13,71 @@
       font-family: Arial, sans-serif;
     }
 
-    /* Container for top images */
-    .top-images {
+    /* Place the single responsive icon at top */
+    .top-icon {
       margin-top: 20px;
     }
-    /* By default, show both icons at some size. 
-       We'll use a <picture> approach below if you want only one at a time */
-    .top-images img {
-      margin: 0 10px;
-      width: 100px;
-      height: auto;
-    }
 
-    /* If you want a single image that changes 
-       based on screen width, you'd use <picture> or a CSS media query. */
-
-    /* Content area below images */
+    /* Content below the icon */
     .content {
       margin-top: 30px;
     }
 
-    /* Show .msg-small by default, hide .msg-large */
-    .msg-small {
-      display: block;
-    }
-    .msg-large {
-      display: none;
-    }
+    /* Responsive text: show .msg-small by default, hide .msg-large */
+    .msg-small { display: block; }
+    .msg-large { display: none; }
+
     /* Switch them at 600px or wider */
     @media (min-width: 600px) {
-      .msg-small {
-        display: none;
-      }
-      .msg-large {
-        display: block;
-      }
+      .msg-small { display: none; }
+      .msg-large { display: block; }
     }
 
-    /* Simple spacing for the add-item form */
-    .add-item-form {
-      margin-top: 20px;
-    }
-
+    /* Database list, no bullets */
     #items-list {
       list-style-type: none;
       padding-left: 0;
     }
 
+    /* Add-item form spacing */
+    .add-item-form {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <!-- Top icons (or use <picture> if you want 
-       to switch icon files based on screen size) -->
-  <div class="top-images">
-    <img src="/static/images/icon-192x192.png" alt="Icon 192">
-    <img src="/static/images/icon-512x512.png" alt="Icon 512">
+  <!-- 
+    Single <picture> ensures ONLY ONE icon appears.
+    - Below 600px: icon-192x192.png
+    - 600px and up: icon-512x512.png 
+  -->
+  <div class="top-icon">
+    <picture>
+      <!-- For screens >= 600px, load the bigger icon. -->
+      <source 
+        srcset="/static/images/icon-512x512.png"
+        media="(min-width: 600px)"
+      >
+      <!-- Default/fallback for < 600px -->
+      <img 
+        src="/static/images/icon-192x192.png" 
+        alt="Knox Grammar Icon" 
+        style="width: 150px; height: auto;" 
+      >
+    </picture>
   </div>
 
   <div class="content">
-    <h1>Hello, PWA + Database + Centered Images!</h1>
-
-    <!-- Responsive text: see it switch at < 600px vs >= 600px -->
-    <p class="msg-small">Screen &lt; 600px: showing the smaller icon (192x192).</p>
-    <p class="msg-large">Screen &gt;= 600px: showing the larger icon (512x512).</p>
+    <h1>Hello, PWA + Database + Single Responsive Icon!</h1>
+    <p class="msg-small">Screen &lt; 600px: smaller icon (192×192).</p>
+    <p class="msg-large">Screen &gt;= 600px: larger icon (512×512).</p>
 
     <h2>Database Items</h2>
     <ul id="items-list"></ul>
 
-    <!-- Section to add a new item to the database -->
+    <!-- Add new item form -->
     <div class="add-item-form">
-      <input type="text" id="newItemInput" placeholder="Enter new item name" />
+      <input type="text" id="newItemInput" placeholder="Enter new item name">
       <button id="addItemButton">Add Item</button>
       <p id="statusMessage"></p>
     </div>
@@ -94,7 +89,7 @@
     const addItemButton = document.getElementById('addItemButton');
     const statusMessage = document.getElementById('statusMessage');
 
-    // 1) Load existing items from /api/items
+    // 1) Fetch & display existing DB items
     function loadItems() {
       fetch('/api/items')
         .then(resp => resp.json())
@@ -108,21 +103,18 @@
         })
         .catch(err => {
           console.error('Error fetching items:', err);
-          statusMessage.textContent = 'Could not load items.';
+          statusMessage.textContent = 'Error loading items.';
         });
     }
+    loadItems(); // On page load
 
-    // Call loadItems() on page load
-    loadItems();
-
-    // 2) Add a new item on button click
+    // 2) Add a new item
     addItemButton.addEventListener('click', () => {
       const name = newItemInput.value.trim();
       if (!name) {
         statusMessage.textContent = 'Please enter an item name.';
         return;
       }
-      // POST request to /api/additem
       fetch('/api/additem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -135,14 +127,12 @@
         return resp.json();
       })
       .then(updatedItems => {
-        // Re-render the list
         itemsList.innerHTML = '';
         updatedItems.forEach(item => {
           const li = document.createElement('li');
           li.textContent = `ID ${item.id} - ${item.name}`;
           itemsList.appendChild(li);
         });
-        // Clear the input, show success
         newItemInput.value = '';
         statusMessage.textContent = 'Item added!';
       })
@@ -152,7 +142,7 @@
       });
     });
 
-    // 3) Optional: register the service worker (for PWA/offline)
+    // 3) Optional: register service worker for PWA offline
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registered'))
