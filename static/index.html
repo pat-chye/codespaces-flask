@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title>My Minimal PWA</title>
+  <meta charset="UTF-8" />
+  <title>Hello PWA</title>
   <!-- Link the manifest -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3367D6">
-  <!-- Register service worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        // If you used the route above, use `/service-worker.js`
-        // If you want to reference directly from static/ use `/static/service-worker.js`
-        .register('/service-worker.js')  
-        .then(() => console.log('Service Worker registered'))
-        .catch(err => console.error('SW registration failed:', err));
-    }
-  </script>
+  <meta name="theme-color" content="#3367D6" />
 </head>
 <body>
   <h1>Hello, PWA World!</h1>
   <p>This is a minimal example of a Progressive Web App.</p>
   <p>Try turning off your internet after you load this page, and refresh!</p>
+
+  <!-- Register the service worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('SW registration failed:', err));
+    }
+  </script>
 </body>
 </html>
