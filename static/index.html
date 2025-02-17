@@ -1,28 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PWA + DB + Add Items</title>
+  <meta charset="UTF-8" />
+  <title>PWA + DB + Insert + Responsive</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Center everything and set default font */
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
 
-  <!-- Link your main.css if you want styling -->
-  <!-- <link rel="stylesheet" href="/static/main.css" /> -->
+    /* Container for top images */
+    .top-images {
+      margin-top: 20px;
+    }
+    /* By default, show both icons at some size. 
+       We'll use a <picture> approach below if you want only one at a time */
+    .top-images img {
+      margin: 0 10px;
+      width: 100px;
+      height: auto;
+    }
+
+    /* If you want a single image that changes 
+       based on screen width, you'd use <picture> or a CSS media query. */
+
+    /* Content area below images */
+    .content {
+      margin-top: 30px;
+    }
+
+    /* Show .msg-small by default, hide .msg-large */
+    .msg-small {
+      display: block;
+    }
+    .msg-large {
+      display: none;
+    }
+    /* Switch them at 600px or wider */
+    @media (min-width: 600px) {
+      .msg-small {
+        display: none;
+      }
+      .msg-large {
+        display: block;
+      }
+    }
+
+    /* Simple spacing for the add-item form */
+    .add-item-form {
+      margin-top: 20px;
+    }
+
+    #items-list {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+  </style>
 </head>
 <body>
-  <h1>Hello, PWA + Database + Add Items!</h1>
-
-  <!-- Display DB items here -->
-  <h2>Database Items</h2>
-  <ul id="items-list"></ul>
-
-  <!-- Simple input and button to add a new item -->
-  <div>
-    <input type="text" id="newItemInput" placeholder="Enter new item" />
-    <button id="addItemButton">Add Item</button>
+  <!-- Top icons (or use <picture> if you want 
+       to switch icon files based on screen size) -->
+  <div class="top-images">
+    <img src="/static/images/icon-192x192.png" alt="Icon 192">
+    <img src="/static/images/icon-512x512.png" alt="Icon 512">
   </div>
 
-  <!-- Optional: instructions or a message area -->
-  <p id="statusMessage"></p>
+  <div class="content">
+    <h1>Hello, PWA + Database + Centered Images!</h1>
+
+    <!-- Responsive text: see it switch at < 600px vs >= 600px -->
+    <p class="msg-small">Screen &lt; 600px: showing the smaller icon (192x192).</p>
+    <p class="msg-large">Screen &gt;= 600px: showing the larger icon (512x512).</p>
+
+    <h2>Database Items</h2>
+    <ul id="items-list"></ul>
+
+    <!-- Section to add a new item to the database -->
+    <div class="add-item-form">
+      <input type="text" id="newItemInput" placeholder="Enter new item name" />
+      <button id="addItemButton">Add Item</button>
+      <p id="statusMessage"></p>
+    </div>
+  </div>
 
   <script>
     const itemsList = document.getElementById('items-list');
@@ -30,38 +94,38 @@
     const addItemButton = document.getElementById('addItemButton');
     const statusMessage = document.getElementById('statusMessage');
 
-    // 1) Function: load items from /api/items
+    // 1) Load existing items from /api/items
     function loadItems() {
       fetch('/api/items')
         .then(resp => resp.json())
         .then(data => {
-          // Clear existing list
           itemsList.innerHTML = '';
-          // Populate
           data.forEach(item => {
             const li = document.createElement('li');
             li.textContent = `ID ${item.id} - ${item.name}`;
             itemsList.appendChild(li);
           });
         })
-        .catch(err => console.error('Error fetching items:', err));
+        .catch(err => {
+          console.error('Error fetching items:', err);
+          statusMessage.textContent = 'Could not load items.';
+        });
     }
 
-    // 2) Call loadItems() on page load
+    // Call loadItems() on page load
     loadItems();
 
-    // 3) Handle adding a new item
+    // 2) Add a new item on button click
     addItemButton.addEventListener('click', () => {
       const name = newItemInput.value.trim();
       if (!name) {
         statusMessage.textContent = 'Please enter an item name.';
         return;
       }
-      
-      // Make a POST request to /api/additem
+      // POST request to /api/additem
       fetch('/api/additem', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name })
       })
       .then(resp => {
@@ -71,16 +135,15 @@
         return resp.json();
       })
       .then(updatedItems => {
-        // If the server returned the updated list, re-render it
+        // Re-render the list
         itemsList.innerHTML = '';
         updatedItems.forEach(item => {
           const li = document.createElement('li');
           li.textContent = `ID ${item.id} - ${item.name}`;
           itemsList.appendChild(li);
         });
-        // Clear the input field
+        // Clear the input, show success
         newItemInput.value = '';
-        // Show success message
         statusMessage.textContent = 'Item added!';
       })
       .catch(err => {
@@ -89,7 +152,7 @@
       });
     });
 
-    // 4) Optional service worker for offline caching
+    // 3) Optional: register the service worker (for PWA/offline)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registered'))
