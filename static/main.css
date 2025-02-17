@@ -91,6 +91,10 @@ code {
     width: 500px;
     height: auto;
   }
+.top-images img {
+    width: 150px;
+    height: auto;
+}
 
 /* At 600px or wider, show .msg-large, hide .msg-small */
 @media (min-width: 600px) {
@@ -102,5 +106,8 @@ code {
     }
     .resp-icon {
         width: 500px;
-      }
+    }
+    .top-images img {
+        width: 300px;
+    }
 }
