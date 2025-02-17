@@ -2,65 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>My Minimal PWA with Icons</title>
+  <title>Responsive Icons Demo</title>
 
-  <!-- Link your stylesheet -->
-  <link rel="stylesheet" href="main.css" />
+  <!-- Ensure proper scaling on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PWA manifest for icons & metadata -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3367D6" />
+  <!-- Link the manifest for PWA install icons -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#3367D6">
 </head>
-<body class="App">
-  <!-- Header using some of your existing classes -->
-  <header class="App-header">
-    <h1>My Minimal PWA</h1>
-    <p>
-      This page is set up to demonstrate your icons from <code>manifest.json</code>
-      and apply styles from <code>main.css</code>.
-    </p>
-  </header>
+<body>
+  <h1>Responsive Icon Example</h1>
 
-  <!-- Example usage of .icons-container and .icon-preview -->
-  <section class="icons-container">
-    <div class="icon-preview">
-      <img
-        src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png"
-        alt="192x192 Icon"
-        width="128"
-        height="128"
-      />
-      <span>192x192 (Displayed at 128px)</span>
-    </div>
-    <div class="icon-preview">
-      <img
-        src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png"
-        alt="512x512 Icon"
-        width="128"
-        height="128"
-      />
-      <span>512x512 (Displayed at 128px)</span>
-    </div>
-  </section>
-
-  <!-- Optional link example using .App-link -->
   <p>
-    <a class="App-link" href="https://example.com" target="_blank">
-      Visit Example
-    </a>
+    Below, we display icons in an HTML <code>&lt;picture&gt;</code> element.
+    This is separate from the icons in <code>manifest.json</code>, which the OS
+    uses when the PWA is installed.
   </p>
 
-  <!-- Optional small text using .small class -->
-  <p class="small">
-    Built with <span class="heart">&hearts;</span> using minimal PWA setup.
-  </p>
+  <picture>
+    <!-- Use the 512x512 icon on screens 600px and wider -->
+    <source srcset="icon-512x512.png" media="(min-width: 600px)">
+    <!-- Fallback for smaller screens -->
+    <img src="icon-192x192.png" alt="App Icon" style="max-width:100%">
+  </picture>
 
-  <!-- Service worker registration (optional, if you have a service-worker.js) -->
+  <!-- Optional service worker for offline caching -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Service Worker registered'))
-        .catch(err => console.error('SW registration failed:', err));
+        .then(() => console.log('SW registered'))
+        .catch((err) => console.error('SW registration failed:', err));
     }
   </script>
 </body>
