@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title if title else "Flask App" }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .top-icon {
+      margin-top: 20px;
+    }
+    .content {
+      margin-top: 30px;
+    }
+    /* Responsive text example */
+    .msg-small { display: block; }
+    .msg-large { display: none; }
+    @media (min-width: 600px) {
+      .msg-small { display: none; }
+      .msg-large { display: block; }
+    }
+    /* Basic forms */
+    form {
+      margin: 10px auto;
+      display: inline-block;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin: 8px 0 4px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 200px;
+      padding: 6px;
+    }
+    .error {
+      color: red;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Single <picture> to show one icon depending on screen width -->
+  <div class="top-icon">
+    <picture>
+      <source 
+        srcset="/static/images/icon-512x512.png"
+        media="(min-width: 600px)"
+      >
+      <img 
+        src="/static/images/icon-192x192.png"
+        alt="Responsive Icon"
+        style="width: 120px; height:auto;"
+      >
+    </picture>
+  </div>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Register service worker for PWA, if desired -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('SW registration failed:', err));
+    }
+  </script>
+</body>
+</html>

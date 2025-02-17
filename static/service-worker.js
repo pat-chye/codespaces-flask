@@ -1,12 +1,12 @@
-const CACHE_NAME = 'minimal-pwa-v1';
+const CACHE_NAME = 'pwa-login-db-v1';
 const URLS_TO_CACHE = [
   '/',
-  '/index.html',
-  '/manifest.json',
-  '/service-worker.js'
+  '/login',
+  '/signup',
+  '/static/images/icon-192x192.png',
+  '/static/images/icon-512x512.png'
 ];
 
-// Install event: cache the important files
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -15,12 +15,10 @@ self.addEventListener('install', event => {
   );
 });
 
-// Fetch event: serve cached content when offline
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      // Return cached response if found, else fetch from network
-      return response || fetch(event.request);
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request);
     })
   );
 });
