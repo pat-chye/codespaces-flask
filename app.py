@@ -1,10 +1,8 @@
-# app.py
-import os
 import sqlite3
-from flask import Flask, g, jsonify
+import os
+from flask import Flask, g
 
 app = Flask(__name__)
-
 DATABASE = os.path.join(os.path.dirname(__file__), 'data.db')
 
 def get_db():
@@ -13,57 +11,40 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
-@app.teardown_appcontext
-def close_connection(exception):
+def close_db(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
 
 def init_db():
-    """Create a simple table if not exists, and insert sample data."""
+    """Create your tables if they don't exist, seed data, etc."""
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL
-        )
+        );
     ''')
+    # Seed data if empty
     cursor.execute('SELECT COUNT(*) FROM items')
     if cursor.fetchone()[0] == 0:
-        cursor.execute("INSERT INTO items (name) VALUES ('First item'), ('Second item'), ('Third item')")
+        cursor.execute("INSERT INTO items (name) VALUES ('First item'), ('Second item')")
     conn.commit()
 
-@app.before_first_request
-def setup():
-    init_db()
+@app.teardown_appcontext
+def teardown_db(exception):
+    close_db(exception)
 
-# Serve index.html as the homepage from /static/index.html
 @app.route('/')
 def home():
-    return app.send_static_file('index.html')
-
-# API endpoint to get items in JSON
-@app.route('/api/items')
-def get_items():
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT id, name FROM items")
-    rows = cursor.fetchall()
-    # Convert to a list of dicts for easy JSON serialization
-    items = []
-    for row in rows:
-        items.append({'id': row[0], 'name': row[1]})
-    return jsonify(items)
-
-# Service Worker route if you want it at root (optional)
-@app.route('/service-worker.js')
-def sw():
-    response = app.send_static_file('service-worker.js')
-    response.headers['Content-Type'] = 'application/javascript'
-    return response
+    items = cursor.fetchall()
+    return f"Items: {items}"
 
 if __name__ == '__main__':
-    # Typical run command in Codespaces:
-    # flask --debug run --host=0.0.0.0 --port=5000
+    with app.app_context():
+        init_db()  # <-- Run our DB init once, before handling any requests.
     app.run(debug=True, host='0.0.0.0', port=5000)
