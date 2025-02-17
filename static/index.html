@@ -13,16 +13,16 @@
 
   <div class="top-images">
     <picture>
-      <!-- If screen width >= 600px, load the bigger icon -->
-      <source 
-        srcset="/static/images/icon-512x512.png" 
+      <!-- If screen width >= 600px, use the 512x512 icon file -->
+      <source
+        srcset="/static/images/icon-512x512.png"
         media="(min-width: 600px)"
       >
-      <!-- Fallback (smaller icon) for screens < 600px -->
+      <!-- Fallback: small icon for screens under 600px -->
       <img 
+        class="resp-icon"
         src="/static/images/icon-192x192.png" 
-        alt="Responsive Icon" 
-        style="width: 100px; height: auto;"
+        alt="Responsive Icon"
       >
     </picture>
   </div>

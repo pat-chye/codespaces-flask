@@ -87,6 +87,10 @@ code {
 .msg-large {
     display: none;
 }
+.resp-icon {
+    width: 500px;
+    height: auto;
+  }
 
 /* At 600px or wider, show .msg-large, hide .msg-small */
 @media (min-width: 600px) {
@@ -96,4 +100,7 @@ code {
     .msg-large {
         display: block;
     }
+    .resp-icon {
+        width: 500px;
+      }
 }
