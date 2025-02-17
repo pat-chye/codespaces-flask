@@ -1,62 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>DB + PWA Demo</title>
+  <meta charset="UTF-8">
+  <title>My PWA + DB Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#3367D6">
 </head>
 <body>
-  <h1>Responsive Icon Example + Database Items</h1>
+  <h1>Hello, PWA + Database!</h1>
+  <p>This page is served statically. Below we'll fetch data from the DB via <code>/api/items</code>.</p>
 
-  <p>
-    Below, we display icons in an HTML <code>&lt;picture&gt;</code> element
-    and also fetch data from the database at <code>/api/items</code>.
-  </p>
-
-  <!-- Existing picture for your icons, unchanged -->
-  <picture>
-    <source
-      srcset="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png"
-      media="(min-width: 600px)"
-    >
-    <img
-      src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png"
-      alt="App Icon"
-      style="max-width:100%"
-    >
-  </picture>
-
-  <hr />
-
-  <h2>Items from the Database:</h2>
   <ul id="items-list">
-    <!-- We'll populate this with JS -->
+    <!-- We will populate via JS -->
   </ul>
 
+  <!-- Optional: register the service worker from /service-worker.js -->
   <script>
-    // 1) Fetch items from the API
+    // 1) Fetch DB items from the Flask endpoint
     fetch('/api/items')
-      .then(response => response.json())
+      .then(resp => resp.json())
       .then(data => {
-        console.log('Fetched items:', data);
-        // 2) Insert them into the page
-        const list = document.getElementById('items-list');
+        const listEl = document.getElementById('items-list');
         data.forEach(item => {
           const li = document.createElement('li');
-          li.textContent = `ID: ${item.id}, Name: ${item.name}`;
-          list.appendChild(li);
+          li.textContent = `Item ID ${item.id} - ${item.name}`;
+          listEl.appendChild(li);
         });
       })
       .catch(err => console.error('Error fetching items:', err));
 
-    // 3) Register the service worker (optional, for PWA)
+    // 2) Register service worker for PWA
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('SW registered'))
+        .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('SW registration failed:', err));
     }
   </script>
 </body>
-</html>
+</html>2
