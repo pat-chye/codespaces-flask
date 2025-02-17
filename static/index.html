@@ -2,42 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Responsive Icons Demo</title>
-
-  <!-- Ensure proper scaling on mobile devices -->
+  <title>DB + PWA Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Link the manifest for PWA install icons -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#3367D6">
 </head>
 <body>
-  <h1>Responsive Icon Example</h1>
+  <h1>Responsive Icon Example + Database Items</h1>
 
   <p>
-    Below, we display icons in an HTML <code>&lt;picture&gt;</code> element.
-    This is separate from the icons in <code>manifest.json</code>, which the OS
-    uses when the PWA is installed.
+    Below, we display icons in an HTML <code>&lt;picture&gt;</code> element
+    and also fetch data from the database at <code>/api/items</code>.
   </p>
 
+  <!-- Existing picture for your icons, unchanged -->
   <picture>
-    <source 
-      srcset="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png" 
+    <source
+      srcset="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png"
       media="(min-width: 600px)"
     >
-    <img 
-      src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png" 
-      alt="App Icon" 
+    <img
+      src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png"
+      alt="App Icon"
       style="max-width:100%"
     >
   </picture>
 
-  <!-- Optional service worker for offline caching -->
+  <hr />
+
+  <h2>Items from the Database:</h2>
+  <ul id="items-list">
+    <!-- We'll populate this with JS -->
+  </ul>
+
   <script>
+    // 1) Fetch items from the API
+    fetch('/api/items')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Fetched items:', data);
+        // 2) Insert them into the page
+        const list = document.getElementById('items-list');
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = `ID: ${item.id}, Name: ${item.name}`;
+          list.appendChild(li);
+        });
+      })
+      .catch(err => console.error('Error fetching items:', err));
+
+    // 3) Register the service worker (optional, for PWA)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('SW registered'))
-        .catch((err) => console.error('SW registration failed:', err));
+        .catch(err => console.error('SW registration failed:', err));
     }
   </script>
 </body>
