@@ -6,6 +6,7 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-align: center; /* Center content horizontally */
 }
 
 /* Code blocks or inline code font */
@@ -13,7 +14,7 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-/* Utility classes */
+/* Utility classes (if you still use them) */
 .small {
     font-size: 0.75rem;
 }
@@ -21,18 +22,16 @@ code {
     color: #ff0000;
 }
 
-/* App container (if used by your HTML) */
+/* Example "App" container styles, if used */
 .App {
     text-align: center;
 }
 
-/* Logo styling (if you have a logo in your app) */
+/* Example .App-logo, .App-header, .App-link if you need them */
 .App-logo {
     height: 40vmin;
     pointer-events: none;
 }
-
-/* Header styling (if you have a header element with this class) */
 .App-header {
     background-color: #282c34;
     min-height: 100vh;
@@ -43,30 +42,58 @@ code {
     font-size: calc(10px + 2vmin);
     color: white;
 }
-
-/* Link styling (if used) */
 .App-link {
     color: #61dafb;
 }
 
-/* --- New Classes for Icon Display --- */
-
-/* Container that holds your icon previews side-by-side */
+/* Icons container (if used) */
 .icons-container {
     display: flex;
-    flex-wrap: wrap;       /* allows wrapping on smaller screens */
-    gap: 20px;            /* space between icons */
+    flex-wrap: wrap;
+    gap: 20px;
     justify-content: center;
-    margin: 20px auto;    /* center with some spacing */
-    max-width: 800px;     /* optional max width */
+    margin: 20px auto;
+    max-width: 800px;
 }
-
-/* Each icon + label grouping */
 .icon-preview {
     text-align: center;
 }
-
 .icon-preview img {
     display: block;
-    margin: 0 auto 8px; /* center the icon and add spacing below */
+    margin: 0 auto 8px;
+}
+
+/* --- NEW STYLES from the inline example --- */
+
+/* Spacing for top images (like .top-images inlined previously) */
+.top-images {
+    margin-top: 20px;
+}
+.top-images img {
+    margin: 0 10px;  /* gap between icons */
+    width: 100px;
+    height: auto;
+}
+
+/* Content spacing below images */
+.content {
+    margin-top: 30px;
+}
+
+/* Responsive text: show .msg-small by default, hide .msg-large */
+.msg-small {
+    display: block;
+}
+.msg-large {
+    display: none;
+}
+
+/* At 600px or wider, show .msg-large, hide .msg-small */
+@media (min-width: 600px) {
+    .msg-small {
+        display: none;
+    }
+    .msg-large {
+        display: block;
+    }
 }

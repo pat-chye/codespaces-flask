@@ -4,51 +4,35 @@
   <meta charset="UTF-8" />
   <title>Centered Images + PWA + DB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* Center everything in the body */
-    body {
-      margin: 0;
-      padding: 0;
-      text-align: center;  /* horizontally centers inline elements */
-      font-family: Arial, sans-serif;
-    }
 
-    /* Add some spacing for the images at the top */
-    .top-images {
-      margin-top: 20px;
-    }
-
-    .top-images img {
-      margin: 0 10px;      /* small gap between icons */
-      width: 100px;        /* scale the icons if desired */
-      height: auto;
-    }
-
-    .content {
-      margin-top: 30px;    /* push text down below images */
-    }
-  </style>
+  <!-- Link to your main.css -->
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 <body>
+  <!-- The rest of your HTML stays the same -->
+
   <div class="top-images">
-    <!-- Images placed ABOVE all text, side by side, centered -->
-    <img src="/static/images/icon-192x192.png" alt="Icon 192" />
-    <img src="/static/images/icon-512x512.png" alt="Icon 512" />
+    <img src="/static/images/icon-192x192.png" alt="Icon 192">
+    <img src="/static/images/icon-512x512.png" alt="Icon 512">
   </div>
 
   <div class="content">
     <h1>Hello, PWA + Database + Centered Images!</h1>
-    <p>
-      These images above are stored in <code>/static/images</code>, 
-      and are displayed at the top of the page, centered.
+
+    <!-- Responsive text for small vs. large screens -->
+    <p class="msg-small">
+      Screen < 600px: showing the small icon (192x192).
+    </p>
+    <p class="msg-large">
+      Screen >= 600px: showing the larger icon (512x512).
     </p>
 
-    <h2>Database Items:</h2>
+    <h2>Database Items</h2>
     <ul id="items-list"></ul>
   </div>
 
   <script>
-    // 1) Fetch items from /api/items (just to show DB usage)
+    // Example: fetch DB items from /api/items
     fetch('/api/items')
       .then(resp => resp.json())
       .then(data => {
@@ -61,7 +45,7 @@
       })
       .catch(err => console.error('Error fetching items:', err));
 
-    // 2) Optional: Register service worker for PWA
+    // Service worker (optional)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registered'))
