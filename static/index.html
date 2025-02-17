@@ -12,8 +12,19 @@
   <!-- The rest of your HTML stays the same -->
 
   <div class="top-images">
-    <img src="/static/images/icon-192x192.png" alt="Icon 192">
-    <img src="/static/images/icon-512x512.png" alt="Icon 512">
+    <picture>
+      <!-- If screen width >= 600px, load the bigger icon -->
+      <source 
+        srcset="/static/images/icon-512x512.png" 
+        media="(min-width: 600px)"
+      >
+      <!-- Fallback (smaller icon) for screens < 600px -->
+      <img 
+        src="/static/images/icon-192x192.png" 
+        alt="Responsive Icon" 
+        style="width: 100px; height: auto;"
+      >
+    </picture>
   </div>
 
   <div class="content">
