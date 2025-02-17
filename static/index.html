@@ -1,34 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My PWA + DB Demo</title>
+  <meta charset="UTF-8" />
+  <title>Centered Images + PWA + DB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Center everything in the body */
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: center;  /* horizontally centers inline elements */
+      font-family: Arial, sans-serif;
+    }
+
+    /* Add some spacing for the images at the top */
+    .top-images {
+      margin-top: 20px;
+    }
+
+    .top-images img {
+      margin: 0 10px;      /* small gap between icons */
+      width: 100px;        /* scale the icons if desired */
+      height: auto;
+    }
+
+    .content {
+      margin-top: 30px;    /* push text down below images */
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, PWA + Database!</h1>
-  <p>This page is served statically. Below we'll fetch data from the DB via <code>/api/items</code>.</p>
+  <div class="top-images">
+    <!-- Images placed ABOVE all text, side by side, centered -->
+    <img src="/images/icon-192x192.png" alt="Icon 192" />
+    <img src="/images/icon-512x512.png" alt="Icon 512" />
+  </div>
 
-  <ul id="items-list">
-    <!-- We will populate via JS -->
-  </ul>
+  <div class="content">
+    <h1>Hello, PWA + Database + Centered Images!</h1>
+    <p>
+      These images above are stored in <code>/static/images</code>, 
+      and are displayed at the top of the page, centered.
+    </p>
 
-  <!-- Optional: register the service worker from /service-worker.js -->
+    <h2>Database Items:</h2>
+    <ul id="items-list"></ul>
+  </div>
+
   <script>
-    // 1) Fetch DB items from the Flask endpoint
+    // 1) Fetch items from /api/items (just to show DB usage)
     fetch('/api/items')
       .then(resp => resp.json())
       .then(data => {
-        const listEl = document.getElementById('items-list');
+        const list = document.getElementById('items-list');
         data.forEach(item => {
           const li = document.createElement('li');
-          li.textContent = `Item ID ${item.id} - ${item.name}`;
-          listEl.appendChild(li);
+          li.textContent = `ID ${item.id} - ${item.name}`;
+          list.appendChild(li);
         });
       })
       .catch(err => console.error('Error fetching items:', err));
 
-    // 2) Register service worker for PWA
+    // 2) Optional: Register service worker for PWA
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registered'))
@@ -36,4 +69,4 @@
     }
   </script>
 </body>
-</html>2
+</html>
