@@ -2,20 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Minimal PWA</title>
-  <link rel="manifest" href="/manifest.json">
+  <title>My Minimal PWA with Icons</title>
+
+  <!-- Link your stylesheet -->
+  <link rel="stylesheet" href="main.css" />
+
+  <!-- PWA manifest for icons & metadata -->
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3367D6" />
 </head>
-<body>
-  <h1>Hello, PWA World!</h1>
-  <p>This is a minimal example of a Progressive Web App.</p>
-  <p>Try turning off your internet after you load this page, and refresh!</p>
+<body class="App">
+  <!-- Header using some of your existing classes -->
+  <header class="App-header">
+    <h1>My Minimal PWA</h1>
+    <p>
+      This page is set up to demonstrate your icons from <code>manifest.json</code>
+      and apply styles from <code>main.css</code>.
+    </p>
+  </header>
 
-  <!-- Register the service worker -->
+  <!-- Example usage of .icons-container and .icon-preview -->
+  <section class="icons-container">
+    <div class="icon-preview">
+      <img
+        src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png"
+        alt="192x192 Icon"
+        width="128"
+        height="128"
+      />
+      <span>192x192 (Displayed at 128px)</span>
+    </div>
+    <div class="icon-preview">
+      <img
+        src="https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png"
+        alt="512x512 Icon"
+        width="128"
+        height="128"
+      />
+      <span>512x512 (Displayed at 128px)</span>
+    </div>
+  </section>
+
+  <!-- Optional link example using .App-link -->
+  <p>
+    <a class="App-link" href="https://example.com" target="_blank">
+      Visit Example
+    </a>
+  </p>
+
+  <!-- Optional small text using .small class -->
+  <p class="small">
+    Built with <span class="heart">&hearts;</span> using minimal PWA setup.
+  </p>
+
+  <!-- Service worker registration (optional, if you have a service-worker.js) -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/service-worker.js')
+      navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('SW registration failed:', err));
     }
