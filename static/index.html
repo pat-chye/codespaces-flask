@@ -1,62 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Centered Images + PWA + DB</title>
+  <meta charset="UTF-8">
+  <title>PWA + DB + Add Items</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Link to your main.css -->
-  <link rel="stylesheet" href="/static/main.css">
+  <!-- Link your main.css if you want styling -->
+  <!-- <link rel="stylesheet" href="/static/main.css" /> -->
 </head>
 <body>
-  <!-- The rest of your HTML stays the same -->
+  <h1>Hello, PWA + Database + Add Items!</h1>
 
-  <div class="top-images">
-    <picture>
-      <!-- If screen width >= 600px, use the 512x512 icon file -->
-      <source
-        srcset="/static/images/icon-512x512.png"
-        media="(min-width: 600px)"
-      >
-      <!-- Fallback: small icon for screens under 600px -->
-      <img 
-        class="resp-icon"
-        src="/static/images/icon-192x192.png" 
-        alt="Responsive Icon"
-      >
-    </picture>
+  <!-- Display DB items here -->
+  <h2>Database Items</h2>
+  <ul id="items-list"></ul>
+
+  <!-- Simple input and button to add a new item -->
+  <div>
+    <input type="text" id="newItemInput" placeholder="Enter new item" />
+    <button id="addItemButton">Add Item</button>
   </div>
 
-  <div class="content">
-    <h1>Hello, PWA + Database + Centered Images!</h1>
-
-    <!-- Responsive text for small vs. large screens -->
-    <p class="msg-small">
-      Screen < 600px: showing the small icon (192x192).
-    </p>
-    <p class="msg-large">
-      Screen >= 600px: showing the larger icon (512x512).
-    </p>
-
-    <h2>Database Items</h2>
-    <ul id="items-list"></ul>
-  </div>
+  <!-- Optional: instructions or a message area -->
+  <p id="statusMessage"></p>
 
   <script>
-    // Example: fetch DB items from /api/items
-    fetch('/api/items')
-      .then(resp => resp.json())
-      .then(data => {
-        const list = document.getElementById('items-list');
-        data.forEach(item => {
+    const itemsList = document.getElementById('items-list');
+    const newItemInput = document.getElementById('newItemInput');
+    const addItemButton = document.getElementById('addItemButton');
+    const statusMessage = document.getElementById('statusMessage');
+
+    // 1) Function: load items from /api/items
+    function loadItems() {
+      fetch('/api/items')
+        .then(resp => resp.json())
+        .then(data => {
+          // Clear existing list
+          itemsList.innerHTML = '';
+          // Populate
+          data.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `ID ${item.id} - ${item.name}`;
+            itemsList.appendChild(li);
+          });
+        })
+        .catch(err => console.error('Error fetching items:', err));
+    }
+
+    // 2) Call loadItems() on page load
+    loadItems();
+
+    // 3) Handle adding a new item
+    addItemButton.addEventListener('click', () => {
+      const name = newItemInput.value.trim();
+      if (!name) {
+        statusMessage.textContent = 'Please enter an item name.';
+        return;
+      }
+      
+      // Make a POST request to /api/additem
+      fetch('/api/additem', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name })
+      })
+      .then(resp => {
+        if (!resp.ok) {
+          throw new Error(`Server error: ${resp.status}`);
+        }
+        return resp.json();
+      })
+      .then(updatedItems => {
+        // If the server returned the updated list, re-render it
+        itemsList.innerHTML = '';
+        updatedItems.forEach(item => {
           const li = document.createElement('li');
           li.textContent = `ID ${item.id} - ${item.name}`;
-          list.appendChild(li);
+          itemsList.appendChild(li);
         });
+        // Clear the input field
+        newItemInput.value = '';
+        // Show success message
+        statusMessage.textContent = 'Item added!';
       })
-      .catch(err => console.error('Error fetching items:', err));
+      .catch(err => {
+        console.error('Error adding item:', err);
+        statusMessage.textContent = 'Error adding item. Check console.';
+      });
+    });
 
-    // Service worker (optional)
+    // 4) Optional service worker for offline caching
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registered'))
