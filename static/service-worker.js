@@ -2,7 +2,8 @@ const CACHE_NAME = 'minimal-pwa-v1';
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/service-worker.js'
 ];
 
 // Install event: cache the important files

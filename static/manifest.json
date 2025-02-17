@@ -1,20 +1,20 @@
 {
-    "name": "My Minimal PWA",
-    "short_name": "MiniPWA",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#3367D6",
-    "icons": [
-      {
-        "src": "https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "My Minimal PWA",
+  "short_name": "MiniPWA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3367D6",
+  "icons": [
+    {
+      "src": "https://kxse.s3.ap-southeast-2.amazonaws.com/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://kxse.s3.ap-southeast-2.amazonaws.com/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
