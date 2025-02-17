@@ -9,8 +9,11 @@
   <!-- Register service worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registered!'))
+      navigator.serviceWorker
+        // If you used the route above, use `/service-worker.js`
+        // If you want to reference directly from static/ use `/static/service-worker.js`
+        .register('/service-worker.js')  
+        .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('SW registration failed:', err));
     }
   </script>
